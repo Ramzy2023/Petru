@@ -1,0 +1,190 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container mt-5 p-5 border">
+    <div class="">
+        <a href="#" class="btn btn-primary px-5 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Travel Order</a>
+    </div>
+    <table class="table mt-5 table-light">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Travel Order No.</th>
+                <th scope="col">Employee Name</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assign_travel in assign_travel_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ assign_travel.travelorder.travel_number }}</td>
+                <td>{{ assign_travel.employee.employee_name }}</td>
+                <td>
+                    <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal_{{ travel.id }}">Edit</a>
+                    <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal_{{ travel.id }}">Delete</a>
+                    
+                </td>
+            </tr>
+
+<!-- Update Modal for Employee -->
+<div class="modal fade" id="updateModal_{{ travel.id }}" tabindex="-1" aria-labelledby="updateModalLabel_{{ travel.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="updateModalLabel_{{ travel.id }}">Update Travel Order</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="{{ travel.id }}">
+                    
+                    <!-- Travel Number -->
+                    <div>
+                        <label for="travel_number">Travel Order Number</label>
+                        <input type="text" class="form-control" value="{{ travel.travel_number }}" name="travel_number" id="travel_number" required>
+                    </div>
+                    <div>
+                        <label for="destination">Destination</label>
+                        <input type="text" class="form-control" value="{{ travel.destination }}" name="destination" id="destination" required>
+                    </div>
+                    <div>
+                        <label for="date_start">Date Start</label>
+                        <input type="date" class="form-control" value="{{ travel.date_start }}" name="date_start" id="date_start" required>
+                    </div>
+                    <div>
+                        <label for="date_end">Date End</label>
+                        <input type="date" class="form-control" value="{{ travel.date_end }}" name="date_end" id="date_end" required>
+                    </div>
+                    <div>
+                        <label for="purpose">Purpose of Travel</label>
+                        <input type="text" class="form-control" value="{{ travel.purpose }}" name="purpose" id="purpose" required>
+                    </div>
+                    <div>
+                        <label for="nature_travel_name_update">Nature of Travel</label>
+                        <select class="form-control" name="nature_travel_name" id="nature_travel_name_update" required >
+                            <option value="" disabled selected>Select Nature of Travel</option>
+                            {% for nature_travel in nature_travel_list %}
+                                <option value="{{ nature_travel.id }}"  selected >{{ nature_travel.nature_travel_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="file">Upload File</label>
+                        <input type="file" class="form-control" name="file" id="file">
+                        {% if travel.file %}
+                            <p>Current File: <a href="{{ travel.file.url }}" target="_blank">{{ travel.file }}</a></p>
+                        {% endif %}
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="travel_update">Update Travel Order</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteModal_{{ travel.id }}" tabindex="-1" aria-labelledby="deleteModalLabel_{{ travel.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ travel.id }}">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="deleteModalLabel_{{ travel.id }}">Delete Travel Order</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this travel?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger" name="travel_delete">Delete Travel Order</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Adding Employee -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true" data-bs-focus="false">
+    <div class="modal-dialog">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addModalLabel">Add Travel Order</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Travel Number -->
+                     
+                    <div>
+                        <label for="travel_number">Search Travel Number</label>
+                        <select class="form-control select2" name="travel_number" id="travel_number_select" required>
+                            <option value="" disabled selected>Enter Travel Number</option>
+                            {% for travel in travel_list %}
+                                <option value="{{ travel.id }}">{{ travel.travel_number }}</option>
+                            {% endfor %}
+                        </select>
+                        
+                    </div>
+                    <div>
+                        <label for="employee_name">Search Employee</label>
+                        <select class="form-control select2" name="employee_name" id="employee_name_select" required>
+                            <option value="" disabled selected>Enter Travel Number</option>
+                            {% for employee in employee_list %}
+                                <option value="{{ employee.id }}">{{ employee.employee_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="assign_add">Add Travel Order</button>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    // Initialize Select2 for both dropdowns on modal show
+                    $('#addModal').on('shown.bs.modal', function () {
+                        $('#travel_number_select').select2({
+                            placeholder: "Enter Travel Number",
+                            allowClear: true,
+                            width: '100%'
+                        });
+                        
+                        $('#employee_name_select').select2({
+                            placeholder: "Enter Employee Name",
+                            allowClear: true,
+                            width: '100%'
+                        });
+                    });
+            
+                    // Destroy Select2 for both dropdowns on modal hide
+                    $('#addModal').on('hidden.bs.modal', function () {
+                        $('#travel_number_select').select2('destroy');
+                        $('#employee_name_select').select2('destroy');
+                    });
+                });
+            </script>
+            
+        </form>
+    </div>
+</div>
+
+
+{% endblock content %}

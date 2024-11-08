@@ -1,0 +1,20 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+    <select class="form-control select2" id="test_select">
+        <option value="" disabled selected>Enter Travel Number</option>
+        <option value="1">Travel Number 1</option>
+        <option value="2">Travel Number 2</option>
+        <option value="3">Travel Number 3</option>
+    </select>
+
+    <script>
+        $(document).ready(function() {
+            $('#test_select').select2({
+                placeholder: "Enter Travel Number",
+                allowClear: true
+            });
+        });
+    </script>
+
+    {% endblock content %}

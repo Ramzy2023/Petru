@@ -195,3 +195,23 @@ def travel(request):
 
     context = {"travel_list":travel,"nature_travel_list":nature_travel}
     return render(request,'myapp/travelorder.html',context)
+
+def assigntravel(request):
+    employee = Employee.objects.all()
+    travel = TravelOrder.objects.all()
+    assign_travel = AssignTravel.objects.all()
+
+    if request.method == "POST":
+        if "assign_add" in request.POST:
+            employee_id = request.POST.get("employee_name")
+            travelorder_id = request.POST.get("travel_number")
+            AssignTravel.objects.create(
+                employee_id = employee_id,
+                travelorder_id = travelorder_id
+            )
+
+    context = {"employee_list":employee,"travel_list":travel,"assign_travel_list":assign_travel}
+    return render(request,'myapp/assigntravel.html',context)
+
+def test(request):
+    return render(request,'myapp/test.html')
