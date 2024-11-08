@@ -36,7 +36,7 @@
 <!-- Update Modal for Employee -->
 <div class="modal fade" id="updateModal_{{ travel.id }}" tabindex="-1" aria-labelledby="updateModalLabel_{{ travel.id }}" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
@@ -87,7 +87,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" name="travel_update">Update Employee</button>
+                    <button type="submit" class="btn btn-primary" name="travel_update">Update Travel Order</button>
                 </div>
             </div>
         </form>
@@ -104,7 +104,7 @@
                         <input type="hidden" name="id" value="{{ travel.id }}">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="deleteModalLabel_{{ travel.id }}">Delete Employee</h1>
+                                <h1 class="modal-title fs-5" id="deleteModalLabel_{{ travel.id }}">Delete Travel Order</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -112,7 +112,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-danger" name="travel_delete">Delete Employee</button>
+                                <button type="submit" class="btn btn-danger" name="travel_delete">Delete Travel Order</button>
                             </div>
                         </div>
                     </form>
@@ -175,7 +175,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" name="travel_add">Add Employee</button>
+                    <button type="submit" class="btn btn-primary" name="travel_add">Add Travel Order</button>
                 </div>
             </div>
         </form>

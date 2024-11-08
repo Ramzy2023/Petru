@@ -168,10 +168,30 @@ def travel(request):
                 natureoftavel_id = natureoftavel_id,
                 file = file
             )
+        
+        elif "travel_update" in request.POST:
+            id = request.POST.get("id")
+            travel_number = request.POST.get("travel_number")
+            destination = request.POST.get("destination")
+            date_start = request.POST.get("date_start")
+            date_end = request.POST.get("date_end")
+            purpose = request.POST.get("purpose")
+            natureoftavel_id = request.POST.get("nature_travel_name")
+            file = request.FILES.get("file")
+
+            update_travel = TravelOrder.objects.get(id=id)
+            update_travel.travel_number = travel_number
+            update_travel.destination = destination
+            update_travel.date_start = date_start
+            update_travel.date_end = date_end
+            update_travel.purpose = purpose
+            update_travel.natureoftavel_id = natureoftavel_id
+            update_travel.file = file
+            update_travel.save()
 
         elif "travel_delete" in request.POST:
             id = request.POST.get("id")
             TravelOrder.objects.get(id=id).delete()    
-            
+
     context = {"travel_list":travel,"nature_travel_list":nature_travel}
     return render(request,'myapp/travelorder.html',context)
