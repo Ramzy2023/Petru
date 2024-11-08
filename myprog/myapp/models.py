@@ -27,6 +27,7 @@ class TravelOrder(models.Model):
     date_end = models.DateField(verbose_name="Date End")
     purpose = models.CharField(max_length=100,verbose_name="Purpose of Travel")
     natureoftavel = models.ForeignKey(NatureOfTravel,on_delete=models.CASCADE)
+    file = models.FileField(upload_to='documents/', default='documents/default_file.pdf', verbose_name="Upload File")
 
 class AssignTravel(models.Model):
     travelorder = models.ForeignKey(TravelOrder,on_delete=models.CASCADE)

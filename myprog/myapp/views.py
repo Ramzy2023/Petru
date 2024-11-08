@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import AssignTravel,Division,Employee,NatureOfTravel,Office,TravelOrder,Position
+from .models import AssignTravel,Division,Employee,NatureOfTravel,Office,Position,TravelOrder
 
 # Create your views here.
 def main(request):
@@ -120,3 +120,58 @@ def employee(request):
 
     context = {"position_list":position,"division_list":division,"office_list":office,"employee_list":employee}
     return render(request,'myapp/employee.html',context)
+
+def nature_travel(request):
+    nature_travel = NatureOfTravel.objects.all()
+
+    if request.method == "POST":
+        if "nature_travel_add" in request.POST:
+            nature_travel_name = request.POST.get("nature_travel_name")
+            NatureOfTravel.objects.create(
+                nature_travel_name = nature_travel_name
+            )
+        
+        elif "nature_travel_update" in request.POST:
+            id = request.POST.get("id")
+            nature_travel_name = request.POST.get("nature_travel_name")
+
+            update_nature_travel = NatureOfTravel.objects.get(id=id)
+            update_nature_travel.nature_travel_name = nature_travel_name
+            update_nature_travel.save()
+
+        elif "nature_travel_delete" in request.POST:
+            id = request.POST.get("id")
+            NatureOfTravel.objects.get(id=id).delete()
+
+    context = {"nature_travel_list":nature_travel}
+    return render(request,'myapp/travelnature.html',context)
+
+def travel(request):
+    travel = TravelOrder.objects.all()
+    nature_travel = NatureOfTravel.objects.all()
+
+    if request.method == "POST":
+        if "travel_add" in request.POST:
+            travel_number = request.POST.get("travel_number")
+            destination = request.POST.get("destination")
+            date_start = request.POST.get("date_start")
+            date_end = request.POST.get("date_end")
+            purpose = request.POST.get("purpose")
+            natureoftavel_id = request.POST.get("nature_travel_name")
+            file = request.FILES.get("file")
+            TravelOrder.objects.create(
+                travel_number = travel_number,
+                destination = destination,
+                date_start = date_start,
+                date_end = date_end,
+                purpose = purpose,
+                natureoftavel_id = natureoftavel_id,
+                file = file
+            )
+
+        elif "travel_delete" in request.POST:
+            id = request.POST.get("id")
+            TravelOrder.objects.get(id=id).delete()    
+            
+    context = {"travel_list":travel,"nature_travel_list":nature_travel}
+    return render(request,'myapp/travelorder.html',context)

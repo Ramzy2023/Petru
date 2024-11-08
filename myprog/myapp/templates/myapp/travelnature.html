@@ -1,0 +1,110 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container mt-5 p-5 border">
+    <div class="">
+        <a href="" class="btn btn-primary px-5 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Nature of Travel</a>
+    </div>
+
+    <table class="table mt-5 table-light">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nature of Travel Name</th>
+            <th scope="col">Actions</th>
+           </tr>
+        </thead>
+        <tbody>
+          {%for nature_travel in nature_travel_list%}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{nature_travel.nature_travel_name}}</td>
+            <td>
+                <a href="" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal_{{nature_travel.id}}">Edit</a>
+                <a href="" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal_{{nature_travel.id}}">Delete</a>
+            </td>
+          </tr>
+          <!--Update Modal -->
+            <div class="modal fade" id="updateModal_{{nature_travel.id}}" tabindex="-1" aria-labelledby="updateModalLabel_{{nature_travel.id}}" aria-hidden="true">
+                <div class="modal-dialog">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="updateModalLabel_{{nature_travel.id}}">Update Nature of Travel Name</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" value="{{nature_travel.id}}" class="">
+                            <div class="">
+                                <label for="nature_travel_name">Nature of Travel Name</label>
+                            </div>
+                            <div class="">
+                                <input type="text" value="{{nature_travel.nature_travel_name}}" class="form-control" name="nature_travel_name" id="nature_travel_name">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="nature_travel_update">Update Nature of Travel</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteModal_{{nature_travel.id}}" tabindex="-1" aria-labelledby="deleteModalLabel_{{nature_travel.id}}" aria-hidden="true">
+                <div class="modal-dialog">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{nature_travel.id}}" class="">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel_{{nature_travel.id}}">Delete Nature of Travel Name</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure? you want to delete</p>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger" name="nature_travel_delete">Delete Nature of Travel</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+          {%endfor%}
+        </tbody>
+      </table>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+     <form action="" method="post">
+        {% csrf_token %}
+        <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="addModalLabel">Add Nature of Travel Name</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <label for="nature_travel_name">Nature of Travel Name</label>
+                </div>
+                <div class="">
+                    <input type="text" class="form-control" name="nature_travel_name" id="nature_travel_name">
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" name="nature_travel_add">Add Nature of Travel</button>
+            </div>
+          </div>
+     </form>
+    </div>
+  </div>
+{% endblock content %}
+

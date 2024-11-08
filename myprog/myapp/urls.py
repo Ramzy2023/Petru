@@ -24,4 +24,6 @@ urlpatterns = [
     path('office/',views.office,name='office'),
     path('position/',views.position,name='position'),
     path('employee/',views.employee,name='employee'),
+    path('nature_of_travel/',views.nature_travel,name='nature_travel'),
+    path('travel_order/',views.travel,name='travel')
 ]
