@@ -1,0 +1,251 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container mt-5 p-5 border">
+    <div class="">
+        <a href="#" class="btn btn-primary px-5 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Employee</a>
+    </div>
+    <table class="table mt-5 table-light">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Employee Name</th>
+                <th scope="col">Position</th>
+                <th scope="col">Division Name</th>
+                <th scope="col">Office Name</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employee_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ employee.employee_name }}</td>
+                <td>{{ employee.position.position_name }}</td>
+                <td>{{ employee.office.division.division_name }}</td>
+                <td>{{ employee.office.office_name }}</td>
+                <td>
+                    <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal_{{ employee.id }}">Edit</a>
+                    <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal_{{ employee.id }}">Delete</a>
+                </td>
+            </tr>
+
+<!-- Update Modal for Employee -->
+<div class="modal fade" id="updateModal_{{ employee.id }}" tabindex="-1" aria-labelledby="updateModalLabel_{{ employee.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="updateModalLabel_{{ employee.id }}">Update Employee</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="{{ employee.id }}">
+                    
+                    <!-- Division Name -->
+                    <div>
+                        <label for="division_name_update_{{ employee.id }}">Division Name</label>
+                        <select class="form-control" name="division_name" id="division_name_update_{{ employee.id }}" required onchange="enableOfficeDropdownUpdate({{ employee.id }})">
+                            <option value="" disabled selected>Select a division</option>
+                            {% for div in division_list %}
+                                <option value="{{ div.id }}" {% if div.id == employee.office_name.division_name.id %} selected {% endif %}>{{ div.division_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Office Name -->
+                    <div>
+                        <label for="office_name_update_{{ employee.id }}">Office Name</label>
+                        <select class="form-control" name="office_name" id="office_name_update_{{ employee.id }}" required disabled>
+                            <option value="" disabled selected>Select an Office</option>
+                            {% for office in office_list %}
+                                <option value="{{ office.id }}" data-division="{{ office.division.id }}" {% if office.id == employee.office.id %} selected {% endif %} disabled>{{ office.office_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Employee Name -->
+                    <div>
+                        <label for="employee_name">Employee Name</label>
+                        <input type="text" class="form-control" value="{{ employee.employee_name }}" name="employee_name" id="employee_name" required>
+                    </div>
+
+                    <div>
+                        <label for="position_name">Position</label>
+                    </div>
+                    <div>
+                        <select class="form-control" name="position_name" id="position_name_update_{{ employee.id }}" required>
+                            <option value="" disabled selected>Select a Positin</option>
+                            {% for position in position_list %}
+                                <option value="{{ position.id }}">{{ position.position_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="employee_update">Update Employee</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteModal_{{ employee.id }}" tabindex="-1" aria-labelledby="deleteModalLabel_{{ employee.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ employee.id }}">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="deleteModalLabel_{{ employee.id }}">Delete Employee</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this employee?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger" name="employee_delete">Delete Employee</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Adding Employee -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addModalLabel">Add Employee</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label for="division_name">Division Name</label>
+                    </div>
+                    <div>
+                        <select class="form-control" name="division_name" id="division_name" required onchange="enableOfficeDropdown()">
+                            <option value="" disabled selected>Select a division</option>
+                            {% for div in division_list %}
+                                <option value="{{ div.id }}">{{ div.division_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Office Name dropdown, initially disabled -->
+                    <div>
+                        <label for="office_name">Office Name</label>
+                        <select class="form-control" name="office_name" id="office_name" required disabled>
+                            <option value="" disabled selected>Select an Office</option>
+                            <!-- Offices will be populated dynamically based on the selected division -->
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="employee_name">Employee Name</label>
+                        <input type="text" class="form-control" name="employee_name" id="employee_name" required>
+                    </div>
+
+                    <div>
+                        <label for="position_name">Position</label>
+                    </div>
+                    <div>
+                        <select class="form-control" name="position_name" id="position_name" required>
+                            <option value="" disabled selected>Select a Position</option>
+                            {% for position in position_list %}
+                                <option value="{{ position.id }}">{{ position.position_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="employee_add">Add Employee</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+    function enableOfficeDropdown() {
+        const divisionId = document.getElementById('division_name').value;
+        const officeDropdown = document.getElementById('office_name');
+        
+        // Enable the office dropdown if a division is selected
+        if (divisionId) {
+            officeDropdown.disabled = false; // Enable the dropdown
+            filterOffices(divisionId); // Populate the office dropdown based on the selected division
+        } else {
+            officeDropdown.disabled = true; // Disable the dropdown if no division is selected
+        }
+    }
+    
+    function filterOffices(divisionId) {
+        const officeDropdown = document.getElementById('office_name');
+        officeDropdown.innerHTML = '<option value="" disabled selected>Select an Office</option>'; // Reset options
+    
+        {% for office in office_list %}
+            if ("{{ office.division.id }}" == divisionId) {
+                const option = document.createElement("option");
+                option.value = "{{ office.id }}";
+                option.textContent = "{{ office.office_name }}";
+                officeDropdown.appendChild(option);
+            }
+        {% endfor %}
+    }
+    
+
+
+    function enableOfficeDropdownUpdate(employeeId) {
+        const divisionId = document.getElementById('division_name_update_' + employeeId).value;
+        const officeDropdown = document.getElementById('office_name_update_' + employeeId);
+    
+        // Enable the office dropdown only if a division is selected and change the selected office if necessary
+        if (divisionId) {
+            officeDropdown.disabled = false; // Enable the dropdown
+            filterOfficesUpdate(divisionId, employeeId); // Populate the office dropdown based on the selected division
+        } else {
+            officeDropdown.disabled = true; // Disable the dropdown if no division is selected
+        }
+    }
+    
+    function filterOfficesUpdate(divisionId, employeeId) {
+        const officeDropdown = document.getElementById('office_name_update_' + employeeId);
+        officeDropdown.innerHTML = '<option value="" disabled selected>Select an Office</option>'; // Reset options
+    
+        {% for office in office_list %}
+            // Show only offices matching the selected division
+            if ("{{ office.division.id }}" == divisionId) {
+                const option = document.createElement("option");
+                option.value = "{{ office.id }}";
+                option.textContent = "{{ office.office_name }}";
+    
+                // Disable the currently selected office if it belongs to the selected division
+                {% if office.id == employee.office_name.id %}
+                    option.selected = true; // Retain the selected office
+                    option.disabled = true; // Prevent changing the office if already selected
+                {% endif %}
+                officeDropdown.appendChild(option);
+            }
+        {% endfor %}
+    }
+    
+    
+</script>
+{% endblock content %}
