@@ -1,0 +1,49 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container mt-5 p-5 border">
+<div class="">
+        <a href="{%url 'employee'%}" class="btn btn-primary px-5 btn-sm">Back to Employee List</a>
+</div>
+<div>
+    <label for="employee_name" class="mt-4">Employee Name</label>
+    <input type="text" class="form-control" value = "{{employee.employee_name}}"name="employee_name" id="employee_name" required disabled>
+</div>
+<div>
+    <label for="position_name">Position</label>
+    <input type="text" class="form-control" value = "{{employee.position.position_name}}"name="position_name" id="position_name" required disabled>
+</div>
+<div>
+    <label for="division_name">Division</label>
+    <input type="text" class="form-control" value = "{{employee.office.division.division_name}}"name="division_name" id="division_name" required disabled>
+</div>
+<div>
+    <label for="office_name">Office</label>
+    <input type="text" class="form-control" value = "{{employee.office.office_name}}"name="office_name" id="office_name" required disabled>
+</div>
+<br>
+<h2>List of Trainings Attended</h2>
+<table class="table mt-5 table-light">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Travel Order No.</th>
+            <th scope="col">Destination</th>
+            <th scope="col">Date of Travel</th>
+            <th scope="col">Purpose of Travel</th>
+        
+        </tr>
+    </thead>
+    <tbody>
+        {% for training in trainings %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ training.travelorder.travel_number }}</td>
+            <td>{{ training.travelorder.destination }}</td>
+            <td>{{ training.travelorder.date_start }} - {{ training.travelorder.date_end }}</td>
+            <td>{{ training.travelorder.purpose }}</td>
+        </tr>
+        {%endfor%}
+</div>
+{% endblock content %}
+

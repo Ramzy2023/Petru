@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from .models import AssignTravel,Division,Employee,NatureOfTravel,Office,Position,TravelOrder
 
 # Create your views here.
@@ -215,3 +215,10 @@ def assigntravel(request):
 
 def test(request):
     return render(request,'myapp/test.html')
+
+def view_trainings(request, employee_id):
+    # Fetch trainings for the given employee_id from the database
+    trainings = AssignTravel.objects.filter(employee_id=employee_id)
+    employee = get_object_or_404(Employee, id=employee_id)
+    context = {'trainings': trainings, 'employee_id': employee_id,'employee':employee}
+    return render(request, 'myapp/trainings.html', context)

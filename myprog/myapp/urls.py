@@ -27,5 +27,6 @@ urlpatterns = [
     path('nature_of_travel/',views.nature_travel,name='nature_travel'),
     path('travel_order/',views.travel,name='travel'),
     path('assign_travel/',views.assigntravel,name='assign_travel'),
-    path('test/',views.test,name='test')
+    path('test/',views.test,name='test'),
+    path('trainings/<int:employee_id>/', views.view_trainings, name='view_trainings'),
 ]
