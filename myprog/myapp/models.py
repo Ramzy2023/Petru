@@ -32,3 +32,8 @@ class TravelOrder(models.Model):
 class AssignTravel(models.Model):
     travelorder = models.ForeignKey(TravelOrder,on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
+
+class user(models.Model):
+    user_name = models.CharField(max_length=100,verbose_name="Username")
+    password = models.CharField(max_length=100,verbose_name="Password")
+    user_type = models.CharField(max_length=100)

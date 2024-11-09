@@ -1,10 +1,15 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
+from django.contrib.auth import authenticate, login, logout 
+from django.contrib.auth.decorators import login_required
+from .forms import LoginForm
+
 from .models import AssignTravel,Division,Employee,NatureOfTravel,Office,Position,TravelOrder
 
 # Create your views here.
+@login_required
 def main(request):
     return render(request,'myapp/main.html')
-
+@login_required
 def division(request):
     division = Division.objects.all()
 
@@ -30,6 +35,7 @@ def division(request):
     context = {"division_list":division}
     return render(request,'myapp/division.html',context)
 
+@login_required
 def office(request):
     division = Division.objects.all()
     office = Office.objects.all()
@@ -60,6 +66,7 @@ def office(request):
     context = {"division_list":division,"office_list":office}
     return render(request,'myapp/office.html',context)
 
+@login_required
 def position(request):
     position = Position.objects.all()
 
@@ -85,6 +92,7 @@ def position(request):
     context = {"position_list":position}
     return render(request,'myapp/position.html',context)
 
+@login_required
 def employee(request):
     position = Position.objects.all()
     division = Division.objects.all()
@@ -121,6 +129,7 @@ def employee(request):
     context = {"position_list":position,"division_list":division,"office_list":office,"employee_list":employee}
     return render(request,'myapp/employee.html',context)
 
+@login_required
 def nature_travel(request):
     nature_travel = NatureOfTravel.objects.all()
 
@@ -146,6 +155,7 @@ def nature_travel(request):
     context = {"nature_travel_list":nature_travel}
     return render(request,'myapp/travelnature.html',context)
 
+@login_required
 def travel(request):
     travel = TravelOrder.objects.all()
     nature_travel = NatureOfTravel.objects.all()
@@ -196,6 +206,7 @@ def travel(request):
     context = {"travel_list":travel,"nature_travel_list":nature_travel}
     return render(request,'myapp/travelorder.html',context)
 
+@login_required
 def assigntravel(request):
     employee = Employee.objects.all()
     travel = TravelOrder.objects.all()
@@ -216,9 +227,33 @@ def assigntravel(request):
 def test(request):
     return render(request,'myapp/test.html')
 
+@login_required
 def view_trainings(request, employee_id):
     # Fetch trainings for the given employee_id from the database
     trainings = AssignTravel.objects.filter(employee_id=employee_id)
     employee = get_object_or_404(Employee, id=employee_id)
     context = {'trainings': trainings, 'employee_id': employee_id,'employee':employee}
     return render(request, 'myapp/trainings.html', context)
+
+
+def login_view(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('main')  # Replace 'home' with your target URL
+            else:
+                form.add_error(None, "Invalid username or password.")
+    else:
+        form = LoginForm()
+    
+    return render(request, 'myapp/login.html', {'form': form})
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('login')

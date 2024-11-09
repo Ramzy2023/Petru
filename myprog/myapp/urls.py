@@ -19,7 +19,8 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('',views.main,name='main'),
+    path('',views.login_view,name='login'),
+    path('dashboard/',views.main,name='main'),
     path('division/',views.division,name='division'),
     path('office/',views.office,name='office'),
     path('position/',views.position,name='position'),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('assign_travel/',views.assigntravel,name='assign_travel'),
     path('test/',views.test,name='test'),
     path('trainings/<int:employee_id>/', views.view_trainings, name='view_trainings'),
+     path('logout/', views.logout_view, name='logout'),
 ]
