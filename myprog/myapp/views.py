@@ -130,6 +130,43 @@ def employee(request):
     return render(request,'myapp/employee.html',context)
 
 @login_required
+def training_list(request):
+    position = Position.objects.all()
+    division = Division.objects.all()
+    office = Office.objects.all()
+    employee = Employee.objects.all()
+
+    if request.method == "POST":
+        if "employee_add" in request.POST:
+            employee_name = request.POST.get("employee_name")
+            position_id = request.POST.get("position_name")
+            office_id = request.POST.get("office_name")
+            Employee.objects.create(
+                employee_name = employee_name,
+                position_id = position_id,
+                office_id = office_id
+            )
+
+        elif "employee_update" in request.POST:
+            id = request.POST.get("id")
+            employee_name = request.POST.get("employee_name")
+            position_id = request.POST.get("position_name")
+            office_id = request.POST.get("office_name")
+
+            update_employee = Employee.objects.get(id=id)
+            update_employee.employee_name = employee_name
+            update_employee.position_id = position_id
+            update_employee.office_id = office_id
+            update_employee.save()
+
+        elif "employee_delete" in request.POST:
+            id = request.POST.get("id")
+            Employee.objects.get(id=id).delete()
+
+    context = {"position_list":position,"division_list":division,"office_list":office,"employee_list":employee}
+    return render(request,'myapp/training_list.html',context)
+
+@login_required
 def nature_travel(request):
     nature_travel = NatureOfTravel.objects.all()
 

@@ -1,80 +1,226 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+{% load static %}
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>PETRU Tracker</title>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    .select2-container {
+        z-index: 2050; /* Higher than Bootstrap modal z-index of 1050 */
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Roboto", sans-serif;
+    }
+
+    header {
+      position: fixed;
+      background: #22242A;
+      padding: 20px;
+      width: 100%;
+
+      z-index: 1;
+    }
+
+    .left_area h3 {
+      color: #fff;
+      margin: 0px;
+      text-transform: uppercase;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .left_area span {
+      color: #19B3D3;
+    }
+
+    .logout_btn {
+      padding: 5px;
+      background: #dd3b30;
+      text-decoration: none;
+      float: right;
+      margin-top: -30px;
+      margin-right: 5px;
+      border-radius: 2px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      transition: 0.5s;
+
+    }
+
+    .logout_btn:hover {
+      background: #aa251b;
+    }
+
+    .sidebar {
+      background: #2f323a;
+      margin-top: 70px;
+      padding-top: 30px;
+      position: fixed;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      transition: 0.5s;
+      transition-property: left;
+    }
+
+    .sidebar .profile_image {
+      width: 100px;
+      height: 100px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+    }
+
+    .sidebar h4 {
+      color: #ccc;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      color: #fff;
+      display: block;
+      width: 100%;
+      line-height: 60px;
+      text-decoration: none;
+      padding-left: 40px;
+      box-sizing: border-box;
+      transition: 0.5s;
+
+    }
+
+    .sidebar a:hover {
+      background: #e9e9e9;
+    }
+
+    .sidebar i {
+      padding-right: 10px;
+    }
+
+    label #sidebar_btn {
+      z-index: 1;
+      color: #fff;
+      position: fixed;
+      cursor: pointer;
+      left: 300px;
+      font-size: 20px;
+      margin: 5px 0;
+      transition: 0.5s;
+      transition-property: color;
+    }
+
+    label #sidebar_btn:hover {
+      color: #19B3D3;
+    }
+
+    #check:checked~.sidebar {
+      left: -190px;
+    }
+
+    #check:checked~.sidebar a span {
+      display: none;
+    }
+
+    #check:checked~.sidebar a {
+      font-size: 20px;
+      margin-left: 170px;
+      width: 80px;
+    }
+
+    .content {
+      margin-left: 250px;
+      background: url(background.png) no-repeat;
+      background-position: center;
+      background-size: cover;
+      height: 100vh;
+      transition: 0.5s;
+    }
+
+    #check:checked~.content {
+      margin-left: 60px;
+    }
+
+    #check {
+      display: none;
+    }
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <style>
-        body {
-            display: flex;
-        }
-        .sidebar {
-            height: 100vh;
-            background-color: #f8f9fa;
-            padding-top: 20px;
-            width: 200px;
-        }
-        .content {
-            flex: 1;
-            padding: 20px;
-        }
-        .select2-container {
-            z-index: 2050; /* Higher than Bootstrap modal z-index of 1050 */
-        }
-    </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
 </head>
-  <body>
-    <div class="sidebar">
-        <h2>Sidebar</h2>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Homezz</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{%url 'travel'%}">Travel Order</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{%url 'assign_travel'%}">Assign Travel Order</a>
-            </li>
-           <li class="nav-item">
-                <a class="nav-link" href="{%url 'division'%}">Division List</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{%url 'office'%}">Office List</a>
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{%url 'position'%}">Position List</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{%url 'employee'%}">Employee List</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{%url 'nature_travel'%}">Nature of Travel</a>
-            </li>
-            <li class="nav-item">
-                {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
-            {% endif %}
-            </li>
-            
+<body>
 
-      
-        </ul>
+ 
+  <!--header area start-->
+  <header>
+  
+    <div class="left_area">
+      <h3>PETRU Tracker</h3>
     </div>
-    <div class= "container">
-        {%block content%}
-    
-        {%endblock content%}
-    
+    <div class="right_area">
+      <a href="{% url 'logout' %}" class="logout_btn">Logout</a>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </header>
+  <!--header area end-->
+  <!--sidebar start-->
+  <div class="sidebar">
+    <center>
+
+      <img src="{% static "images/admin-icn.png" %}" class="profile_image" alt="">
+      <h4>Admin {{request.user.first_name}}</h4>
+
+    </center>
+
+    <a href="{% url 'main'%}"><i class="fas fa-desktop"></i><span>Dashboard</span></a>
+    <a href="{% url 'travel'%}"><i class="fas fa-solid fa-file"></i><span>Travel Order</span></a>
+    <a href="{% url 'assign_travel'%}"><i class="fas fa-solid fa-file"></i><span>Assign</span></a>
+    <a href="{% url 'training_list'%}"><i class="fas fa-solid fa-users"></i><span>Employee Training</span></a>
+    <hr style="border: 1px solid #fff; width: 80%; margin: 20px auto;">
+    <a href="{% url 'employee'%}"><i class="fas fa-solid fa-plus"></i><span>Employee</span></a>
+    <a href="{% url 'division'%}"><i class="fas fa-solid fa-plus"></i><span>Division</span></a>
+    
+    <a href="{% url 'office'%}"><i class="fas fa-solid fa-plus"></i><span>Office</span></a>
+    <a href="{% url 'position'%}"><i class="fas fa-solid fa-plus"></i><span>Position</span></a>
+    <a href="{% url 'nature_travel'%}"><i class="fas fa-solid fa-plus"></i><span>Nature of Travel</span></a>
+    
+
+
+  </div>
+  <!--sidebar end-->
+
+
+  <!--content start-->
+  <div class="content">
+    <br><br><br><br><br>
+    {% block content %}
+
+    {% endblock content %}
+
+
+    <br><br><br>
+   
+  </div>
+  <!--content end-->
+  <!--
+      written By : sumit kumar
+      -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
 </body>
+
 </html>

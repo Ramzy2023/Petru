@@ -29,6 +29,7 @@ urlpatterns = [
     path('travel_order/',views.travel,name='travel'),
     path('assign_travel/',views.assigntravel,name='assign_travel'),
     path('test/',views.test,name='test'),
+    path('training_list/',views.training_list,name='training_list'),
     path('trainings/<int:employee_id>/', views.view_trainings, name='view_trainings'),
      path('logout/', views.logout_view, name='logout'),
 ]
