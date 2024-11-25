@@ -258,6 +258,21 @@ def assigntravel(request):
                 travelorder_id = travelorder_id
             )
 
+        elif "assign_update" in request.POST:
+            id = request.POST.get("id")
+            employee_id = request.POST.get("employee_name")
+            travelorder_id = request.POST.get("travel_number")
+
+            update_assign_travel = AssignTravel.objects.get(id=id)
+            update_assign_travel.employee_id = employee_id
+            update_assign_travel.travelorder_id = travelorder_id
+            update_assign_travel.save()
+        
+        elif "assign_delete" in request.POST:
+            id = request.POST.get("id")
+            AssignTravel.objects.get(id=id).delete()  
+
+
     context = {"employee_list":employee,"travel_list":travel,"assign_travel_list":assign_travel}
     return render(request,'myapp/assigntravel.html',context)
 
