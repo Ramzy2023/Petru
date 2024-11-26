@@ -1,9 +1,19 @@
 {% extends "myapp/base.html" %}
 
 {% block content %}
-<div class="container mt-5 p-5 border">
-    <div class="">
-        <a href="#" class="btn btn-primary px-5 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Travel Order</a>
+<div class="container mt-5 p-5 border rounded">
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Left-aligned button -->
+        <a href="#" class="btn btn-primary px-5 py-2 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Travel Order</a>
+        
+        <!-- Right-aligned search form -->
+        <div class="d-flex ms-auto">
+            <form action="" method="post" class="d-flex">
+                {% csrf_token %}
+                <input type="text" value = "{{query}}"class="form-control me-2" placeholder="Search Here" name="searchquery" id="search">
+                <button class="btn btn-success" name="travel_search">Search</button>
+            </form>
+        </div>
     </div>
     <table class="table mt-5 table-light">
         <thead>

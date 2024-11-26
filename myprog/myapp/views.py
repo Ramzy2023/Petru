@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
+from django.db.models import Q
 
 from .models import AssignTravel,Division,Employee,NatureOfTravel,Office,Position,TravelOrder
 
@@ -135,6 +136,7 @@ def training_list(request):
     division = Division.objects.all()
     office = Office.objects.all()
     employee = Employee.objects.all()
+    query = ""
 
     if request.method == "POST":
         if "employee_add" in request.POST:
@@ -163,7 +165,13 @@ def training_list(request):
             id = request.POST.get("id")
             Employee.objects.get(id=id).delete()
 
-    context = {"position_list":position,"division_list":division,"office_list":office,"employee_list":employee}
+        elif "employee_search" in request.POST:
+            query = request.POST.get("searchquery")
+            employee = Employee.objects.filter(Q(employee_name__icontains=query) | Q(position__position_name__icontains=query) | Q(office__office_name__icontains=query))
+
+
+        
+    context = {"position_list":position,"division_list":division,"office_list":office,"employee_list":employee,"query":query}
     return render(request,'myapp/training_list.html',context)
 
 @login_required
@@ -196,7 +204,7 @@ def nature_travel(request):
 def travel(request):
     travel = TravelOrder.objects.all()
     nature_travel = NatureOfTravel.objects.all()
-
+    query = ""
     if request.method == "POST":
         if "travel_add" in request.POST:
             travel_number = request.POST.get("travel_number")
@@ -238,9 +246,13 @@ def travel(request):
 
         elif "travel_delete" in request.POST:
             id = request.POST.get("id")
-            TravelOrder.objects.get(id=id).delete()    
+            TravelOrder.objects.get(id=id).delete()
+        
+        elif "travel_search" in request.POST:
+            query = request.POST.get("searchquery")
+            travel = TravelOrder.objects.filter(Q(travel_number__icontains=query) | Q(purpose__icontains=query) | Q(destination__icontains=query) | Q(date_start__icontains=query) | Q(date_end__icontains=query) | Q(natureoftavel__nature_travel_name__icontains=query))
 
-    context = {"travel_list":travel,"nature_travel_list":nature_travel}
+    context = {"travel_list":travel,"nature_travel_list":nature_travel,"query":query}
     return render(request,'myapp/travelorder.html',context)
 
 @login_required
