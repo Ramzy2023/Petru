@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
 from django.db.models import Q
+from django.contrib import messages
 
 from .models import AssignTravel,Division,Employee,NatureOfTravel,Office,Position,TravelOrder
 
@@ -15,23 +16,31 @@ def division(request):
     division = Division.objects.all()
 
     if request.method == "POST":
-        if "div_add" in request.POST:    
-            division_name = request.POST.get("division_name")
-            Division.objects.create(
-                division_name = division_name
-            )
-    
-        elif "div_update" in request.POST:
-            id = request.POST.get("id")
-            division_name = request.POST.get("division_name")
-
-            update_division = Division.objects.get(id=id)
-            update_division.division_name = division_name
-            update_division.save()
+        try:
+            if "div_add" in request.POST:    
+                division_name = request.POST.get("division_name")
+                Division.objects.create(
+                    division_name = division_name
+                )
+                messages.success(request,"Division added successfully")
         
-        elif "div_delete" in request.POST:
-            id = request.POST.get("id")
-            Division.objects.get(id=id).delete()
+            elif "div_update" in request.POST:
+                id = request.POST.get("id")
+                division_name = request.POST.get("division_name")
+
+                update_division = Division.objects.get(id=id)
+                update_division.division_name = division_name
+                update_division.save()
+
+                messages.success(request,"Division updated successfully")
+
+            elif "div_delete" in request.POST:
+                id = request.POST.get("id")
+                Division.objects.get(id=id).delete()
+
+                messages.success(request,"Division deleted successfully")
+        except Exception as e:
+            messages.error(request,f"An error occured: {str(e)}")
 
     context = {"division_list":division}
     return render(request,'myapp/division.html',context)
@@ -50,6 +59,8 @@ def office(request):
                 division_id = division_id
             )
 
+            messages.success(request,"Office added successfully")
+
         elif "office_update" in request.POST:
             id = request.POST.get("id")
             office_name = request.POST.get("office_name")
@@ -60,9 +71,13 @@ def office(request):
             update_office.division_id = division_id
             update_office.save()
 
+            messages.success(request,"Office updated successfully")
+
         elif "office_delete" in request.POST:
             id = request.POST.get("id")
             Office.objects.get(id=id).delete()
+
+            messages.success(request,"Office deleted successfully")
     
     context = {"division_list":division,"office_list":office}
     return render(request,'myapp/office.html',context)
@@ -77,6 +92,8 @@ def position(request):
             Position.objects.create(
                 position_name = position_name
             )
+
+            messages.success(request,"Position added successfully")
         
         elif "position_update" in request.POST:
             id = request.POST.get("id")
@@ -86,9 +103,13 @@ def position(request):
             update_position.position_name = position_name
             update_position.save()
 
+            messages.success(request,"Position updated successfully")
+
         elif "position_delete" in request.POST:
             id = request.POST.get("id")
             Position.objects.get(id=id).delete()
+
+            messages.success(request,"Position deleted successfully")
     
     context = {"position_list":position}
     return render(request,'myapp/position.html',context)
@@ -111,6 +132,8 @@ def employee(request):
                 office_id = office_id
             )
 
+            messages.success(request,"Employee added successfully")
+
         elif "employee_update" in request.POST:
             id = request.POST.get("id")
             employee_name = request.POST.get("employee_name")
@@ -123,9 +146,13 @@ def employee(request):
             update_employee.office_id = office_id
             update_employee.save()
 
+            messages.success(request,"Employee updated successfully")
+
         elif "employee_delete" in request.POST:
             id = request.POST.get("id")
             Employee.objects.get(id=id).delete()
+
+            messages.success(request,"Employee deleted successfully")
 
     context = {"position_list":position,"division_list":division,"office_list":office,"employee_list":employee}
     return render(request,'myapp/employee.html',context)
@@ -184,6 +211,8 @@ def nature_travel(request):
             NatureOfTravel.objects.create(
                 nature_travel_name = nature_travel_name
             )
+
+            messages.success(request,"Nature of Travel added successfully")
         
         elif "nature_travel_update" in request.POST:
             id = request.POST.get("id")
@@ -193,9 +222,13 @@ def nature_travel(request):
             update_nature_travel.nature_travel_name = nature_travel_name
             update_nature_travel.save()
 
+            messages.success(request,"Nature of Travel updated successfully")
+
         elif "nature_travel_delete" in request.POST:
             id = request.POST.get("id")
             NatureOfTravel.objects.get(id=id).delete()
+
+            messages.success(request,"Nature of Travel deleted successfully")
 
     context = {"nature_travel_list":nature_travel}
     return render(request,'myapp/travelnature.html',context)
@@ -223,6 +256,8 @@ def travel(request):
                 natureoftavel_id = natureoftavel_id,
                 file = file
             )
+
+            messages.success(request,"Travel Order added successfully")
         
         elif "travel_update" in request.POST:
             id = request.POST.get("id")
@@ -244,9 +279,13 @@ def travel(request):
             update_travel.file = file
             update_travel.save()
 
+            messages.success(request,"Travel Order updated successfully")
+
         elif "travel_delete" in request.POST:
             id = request.POST.get("id")
             TravelOrder.objects.get(id=id).delete()
+
+            messages.success(request,"Travel Order deleted successfully")
         
         elif "travel_search" in request.POST:
             query = request.POST.get("searchquery")
@@ -270,6 +309,8 @@ def assigntravel(request):
                 travelorder_id = travelorder_id
             )
 
+            messages.success(request,"Employee Travel added successfully")
+
         elif "assign_update" in request.POST:
             id = request.POST.get("id")
             employee_id = request.POST.get("employee_name")
@@ -279,10 +320,14 @@ def assigntravel(request):
             update_assign_travel.employee_id = employee_id
             update_assign_travel.travelorder_id = travelorder_id
             update_assign_travel.save()
+
+            messages.success(request,"Employee Travel updated successfully")
         
         elif "assign_delete" in request.POST:
             id = request.POST.get("id")
             AssignTravel.objects.get(id=id).delete()  
+
+            messages.success(request,"Employee Travel deleted successfully")
 
 
     context = {"employee_list":employee,"travel_list":travel,"assign_travel_list":assign_travel}

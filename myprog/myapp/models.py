@@ -21,7 +21,7 @@ class NatureOfTravel(models.Model):
     nature_travel_name = models.CharField(max_length=100,verbose_name="Nature of Travel")
 
 class TravelOrder(models.Model):
-    travel_number = models.CharField(max_length=100, verbose_name="Travel Order Number")
+    travel_number = models.CharField(max_length=100, verbose_name="Travel Order Number",unique=True)
     destination = models.CharField(max_length=100,verbose_name="Destination")
     date_start = models.DateField(verbose_name="Date Start")
     date_end = models.DateField(verbose_name="Date End")

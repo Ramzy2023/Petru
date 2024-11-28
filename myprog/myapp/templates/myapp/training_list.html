@@ -2,6 +2,13 @@
 
 {% block content %}
 <div class="container mt-5 p-5 border">
+    {%if messages %}
+    {%for message in messages%}
+    <div class="alert alert-success text-center mb-3">
+        {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
     <div class="d-flex">
     
         <form action="" method="post" class="d-flex">
