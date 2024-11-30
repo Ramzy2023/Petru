@@ -9,11 +9,26 @@
     </div>
     {%endfor%}
     {%endif%}
-    <div class="">
-        <a href="" class="btn btn-primary px-5 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Nature of Travel</a>
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Left-aligned button -->
+        <a href="#" class="btn btn-primary px-5 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Position</a>
+        
+        <!-- Right-aligned search form -->
+        <div class="d-flex ms-auto">
+            <form action="" method="post" class="d-flex">
+                {% csrf_token %}
+                <input type="text" value = "{{query}}"class="form-control me-2" placeholder="Search Here" name="searchquery" id="search">
+                <button class="btn btn-success" name="nature_travel_search">Search</button>
+            </form>
+        </div>
     </div>
 
-    <table class="table mt-5 table-light">
+    <table class="table table-sm mt-5">
+        <colgroup>
+            <col width="10%">
+            <col width="80%">
+            <col width="10%">
+        </colgroup>
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -21,7 +36,7 @@
             <th scope="col">Actions</th>
            </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
           {%for nature_travel in nature_travel_list%}
           <tr>
             <td>{{forloop.counter}}</td>
@@ -83,7 +98,19 @@
             </div>
           {%endfor%}
         </tbody>
+        <tfoot class="table-group-divider">
+            <tr>
+                <td colspan="3" class="text-end">
+                    {% if query %}
+                        Showing results: {{ filtered_count }}
+                    {% else %}
+                        Total Travel of Nature: {{ total_count }}
+                    {% endif %}
+                </td>
+            </tr>
+        </tfoot>
       </table>
+
 </div>
 
 

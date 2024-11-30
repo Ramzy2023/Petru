@@ -9,11 +9,26 @@
     </div>
     {%endfor%}
     {%endif%}
-    <div class="">
-        <a href="" class="btn btn-primary px-5 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Position</a>
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Left-aligned button -->
+        <a href="#" class="btn btn-primary px-5 btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add New Position</a>
+        
+        <!-- Right-aligned search form -->
+        <div class="d-flex ms-auto">
+            <form action="" method="post" class="d-flex">
+                {% csrf_token %}
+                <input type="text" value = "{{query}}"class="form-control me-2" placeholder="Search Here" name="searchquery" id="search">
+                <button class="btn btn-success" name="position_search">Search</button>
+            </form>
+        </div>
     </div>
 
-    <table class="table mt-5 table-light">
+    <table class="table table-sm mt-5">
+        <colgroup>
+            <col width="10%">
+            <col width="80%">
+            <col width="10%">
+        </colgroup>
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -21,10 +36,10 @@
             <th scope="col">Actions</th>
            </tr>
         </thead>
-        <tbody>
-          {%for position in position_list%}
+        <tbody class="table-group-divider">
+          {%for position in page%}
           <tr>
-            <td>{{forloop.counter}}</td>
+            <td>{{ forloop.counter|add:page.start_index|add:-1  }}</td>
             <td>{{position.position_name}}</td>
             <td>
                 <a href="" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal_{{position.id}}">Edit</a>
@@ -83,7 +98,39 @@
             </div>
           {%endfor%}
         </tbody>
+        <tfoot class="table-group-divider">
+            <tr>
+                <td colspan="3" class="text-end">
+                    {% if query %}
+                        Showing results: {{ filtered_count }}
+                    {% else %}
+                        Total Positions: {{ total_count }}
+                    {% endif %}
+                </td>
+            </tr>
+        </tfoot>
       </table>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+          <li class="page-item">
+            {% if page.has_previous %}
+            <a class="page-link" href="?page={{ page.previous_page_number }}&searchquery={{ query }}">Previous</a>
+            {%endif%}
+          </li>
+          {% for num_page in page.paginator.page_range%}
+          {% if page.number == num_page%}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ num_page }}&searchquery={{ query }}">{{ num_page }}</a>
+        </li>
+          {%endif%}
+          {%endfor%}
+          <li class="page-item">
+            {%if page.has_next%}
+            <a class="page-link" href="?page={{ page.next_page_number }}&searchquery={{ query }}">Next</a>
+            {%endif%}
+          </li>
+        </ul>
+      </nav>
 </div>
 
 
